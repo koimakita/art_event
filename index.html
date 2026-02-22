@@ -3,436 +3,535 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Art × Philosophy Dialogue</title>
-    <!-- Tailwind CSS -->
+    <title>Art × Philosophy Dialogue | Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body {
-            font-family: 'Noto Sans JP', sans-serif;
-            scroll-behavior: smooth;
-        }
-        .serif {
-            font-family: 'Playfair Display', serif;
-        }
-        .fade-in-section {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
-            will-change: opacity, transform;
-        }
-        .fade-in-section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .no-js .fade-in-section {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .nav-scrolled {
-            background-color: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(8px);
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-        }
+        body { font-family: 'Noto Sans JP', sans-serif; scroll-behavior: smooth; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .fade-in-section { opacity: 0; transform: translateY(20px); transition: opacity 1.2s ease-out, transform 1.2s ease-out; }
+        .fade-in-section.visible { opacity: 1; transform: translateY(0); }
+        .nav-scrolled { background-color: rgba(10, 10, 10, 0.95); backdrop-filter: blur(8px); padding-top: 1rem; padding-bottom: 1rem; }
+        .timeline-step { transition: all 0.6s ease; opacity: 0.3; }
+        .timeline-step.active { opacity: 1; transform: translateX(10px); }
+        .timeline-dot { transition: all 0.6s ease; background-color: #404040; }
+        .timeline-step.active .timeline-dot { background-color: #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.8); transform: scale(1.3); }
+        .modal-backdrop { background-color: rgba(0,0,0,0.8); backdrop-filter: blur(4px); }
+        [hidden] { display: none !important; }
 
-        /* Timeline Focus Effects */
-        .timeline-step {
-            transition: all 0.6s ease;
-            opacity: 0.3;
-        }
-        .timeline-step.active {
-            opacity: 1;
-            transform: translateX(10px);
-        }
-        .timeline-dot {
-            transition: all 0.6s ease;
-            background-color: #404040; /* neutral-700 */
-            box-shadow: 0 0 0px rgba(245, 158, 11, 0);
-        }
-        .timeline-step.active .timeline-dot {
-            background-color: #f59e0b; /* amber-500 */
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.8), 0 0 30px rgba(245, 158, 11, 0.4);
-            transform: scale(1.3);
+        /* Login Screen specific styling */
+        .login-card {
+            background: rgba(23, 23, 23, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 <body class="bg-neutral-950 text-neutral-100 selection:bg-amber-500/30 selection:text-amber-200">
 
-    <!-- Navigation -->
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-700 bg-transparent py-8">
-        <div class="container mx-auto px-6 flex justify-between items-center">
-            <div class="text-xl font-light tracking-[0.4em] uppercase serif">
-                Art <span class="text-amber-500 italic">×</span> Philosophy
-            </div>
-            
-            <div class="hidden md:flex space-x-12">
-                <a href="#concept" class="text-sm uppercase tracking-widest hover:text-amber-500 transition-colors duration-300 font-light">Concept</a>
-                <a href="#sessions" class="text-sm uppercase tracking-widest hover:text-amber-500 transition-colors duration-300 font-light">Sessions</a>
-                <a href="#program" class="text-sm uppercase tracking-widest hover:text-amber-500 transition-colors duration-300 font-light">Program</a>
-                <a href="#info" class="text-sm uppercase tracking-widest hover:text-amber-500 transition-colors duration-300 font-light">Info</a>
-            </div>
-
-            <button class="md:hidden" id="menu-toggle" aria-label="Menu">
-                <i data-lucide="menu"></i>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 z-40 bg-neutral-950 hidden flex-col items-center justify-center space-y-8 text-2xl uppercase tracking-[0.2em] font-light">
-        <button class="absolute top-8 right-6" id="menu-close" aria-label="Close"><i data-lucide="x" size="32"></i></button>
-        <a href="#concept" class="menu-link">Concept</a>
-        <a href="#sessions" class="menu-link">Sessions</a>
-        <a href="#program" class="menu-link">Program</a>
-        <a href="#info" class="menu-link">Info</a>
-    </div>
-
-    <!-- Hero Section -->
-    <section class="relative h-screen flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 z-0">
-            <img 
-                src="https://images.unsplash.com/photo-1514328539438-1b24473ef3ad?auto=format&fit=crop&q=80&w=2000" 
-                alt="Hero Background" 
-                class="w-full h-full object-cover opacity-30 grayscale scale-105"
-            />
-            <div class="absolute inset-0 bg-gradient-to-b from-neutral-950/40 via-neutral-950/80 to-neutral-950"></div>
-        </div>
+    <!-- App Wrapper -->
+    <div id="app-root">
         
-        <div class="relative z-10 text-center px-6 max-w-5xl">
-            <p class="text-amber-500 tracking-[0.6em] uppercase text-xs md:text-sm mb-8">A Dialogue in the Void</p>
-            <h1 class="text-5xl md:text-9xl font-light tracking-tighter mb-10 leading-tight serif">
-                Art <span class="italic text-amber-500/90">×</span> Philosophy<br />
-                Dialogue
-            </h1>
-            <div class="w-16 h-px bg-amber-500/50 mx-auto mb-10"></div>
-            <p class="max-w-xl mx-auto text-neutral-400 text-lg md:text-2xl font-extralight leading-relaxed mb-16">
-                名画の静寂と、名曲の余韻。<br />
-                感性の先にある「問い」に出会う場所。
-            </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-8">
-                <a href="#info" class="bg-white text-neutral-950 px-12 py-5 text-sm font-medium tracking-[0.2em] uppercase hover:bg-amber-500 hover:text-white transition-all duration-700 shadow-2xl inline-flex items-center group">
-                    Join the Dialogue
-                    <i data-lucide="arrow-right" class="ml-3 group-hover:translate-x-2 transition-transform" size="18"></i>
-                </a>
-            </div>
-        </div>
-
-        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 opacity-20 animate-bounce">
-            <i data-lucide="chevron-down" size="32"></i>
-        </div>
-    </section>
-
-    <!-- Concept Section -->
-    <section id="concept" class="py-24 md:py-48 bg-neutral-950 fade-in-section">
-        <div class="container mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-24 items-center">
-                <div class="relative aspect-[4/5] overflow-hidden group">
-                    <img 
-                        src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=1200" 
-                        alt="Classical Sculpture" 
-                        class="w-full h-full object-cover grayscale transition-transform duration-[3000ms] group-hover:scale-110"
-                    />
-                    <div class="absolute inset-0 bg-amber-900/10 mix-blend-overlay"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent opacity-80"></div>
-                    <div class="absolute bottom-12 left-12 right-12">
-                        <p class="text-xl md:text-2xl font-light italic text-neutral-200 leading-relaxed serif">
-                            "The purpose of art is washing the dust of daily life off our souls."
-                        </p>
-                        <p class="text-xs mt-4 text-amber-500 uppercase tracking-[0.3em] font-medium">— Pablo Picasso</p>
+        <!-- PUBLIC VIEW -->
+        <div id="public-view">
+            <!-- Navigation -->
+            <nav id="navbar" class="fixed w-full z-50 transition-all duration-700 bg-transparent py-8">
+                <div class="container mx-auto px-6 flex justify-between items-center">
+                    <div class="text-xl font-light tracking-[0.4em] uppercase serif">
+                        Art <span class="text-amber-500 italic">×</span> Philosophy
                     </div>
+                    <div class="hidden md:flex space-x-12">
+                        <a href="#concept" class="text-sm uppercase tracking-widest hover:text-amber-500 transition-colors duration-300 font-light">Concept</a>
+                        <a href="#program" class="text-sm uppercase tracking-widest hover:text-amber-500 transition-colors duration-300 font-light">Program</a>
+                        <a href="#info" class="text-sm uppercase tracking-widest hover:text-amber-500 transition-colors duration-300 font-light">Info</a>
+                        <button onclick="showAdminLogin()" class="text-xs uppercase tracking-tighter text-neutral-600 hover:text-amber-500 transition-colors">Admin</button>
+                    </div>
+                    <button class="md:hidden" id="menu-toggle"><i data-lucide="menu"></i></button>
                 </div>
-                
-                <div class="space-y-12">
-                    <h2 class="text-4xl md:text-6xl font-light tracking-tight leading-[1.1] serif">
-                        感性を研ぎ澄まし、<br />
-                        <span class="text-amber-500 italic">理性と対話する。</span>
-                    </h2>
-                    <div class="space-y-8 text-neutral-400 font-extralight text-lg md:text-xl leading-[1.8]">
-                        <p>
-                            私たちは芸術を「美しい」と直感します。しかし、その感動の正体が何であるかを言葉にしたことはあるでしょうか。
-                        </p>
-                        <p>
-                            この場は、単なる美術鑑賞でも、机上の哲学講義でもありません。<br />
-                            芸術という入り口から自分自身の奥底にある価値観を覗き込み、他者との対話を通じて「自立した個」としての輪郭をなぞり直す試みです。
-                        </p>
-                        <p>
-                            静寂、音楽、そして言葉。<br />
-                            日常の喧騒から離れ、純粋な思考の贅沢を味わう。
-                        </p>
-                    </div>
-                    <div class="pt-6">
-                        <div class="h-px w-24 bg-amber-500"></div>
-                    </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="relative h-screen flex items-center justify-center overflow-hidden">
+                <div class="absolute inset-0 z-0">
+                    <img src="https://images.unsplash.com/photo-1514328539438-1b24473ef3ad?auto=format&fit=crop&q=80&w=2000" class="w-full h-full object-cover opacity-30 grayscale scale-105" alt="Art background">
+                    <div class="absolute inset-0 bg-gradient-to-b from-neutral-950/40 via-neutral-950/80 to-neutral-950"></div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Themes & Key Questions Section -->
-    <section id="themes" class="relative py-24 md:py-48 bg-neutral-100 text-neutral-900 fade-in-section">
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-xs text-amber-600 tracking-[0.6em] uppercase mb-16 text-center font-bold">Key Questions</h2>
-                <div class="text-center mb-24">
-                    <h3 class="text-3xl md:text-5xl font-light serif italic mb-8">思考の深淵へ誘う問い</h3>
-                    <p class="text-neutral-500 font-light">当日、私たちはこれらの問いを軸に対話を深めます。</p>
+                <div class="relative z-10 text-center px-6 max-w-5xl">
+                    <p class="text-amber-500 tracking-[0.6em] uppercase text-xs md:text-sm mb-8">A Dialogue in the Void</p>
+                    <h1 class="text-5xl md:text-9xl font-light tracking-tighter mb-10 leading-tight serif">
+                        Art <span class="italic text-amber-500/90">×</span> Philosophy<br />
+                        Dialogue
+                    </h1>
+                    <div class="w-16 h-px bg-amber-500/50 mx-auto mb-10"></div>
+                    <p class="max-w-xl mx-auto text-neutral-400 text-lg md:text-2xl font-extralight leading-relaxed mb-16">
+                        名画の静寂と、名曲の余韻。<br />
+                        感性の先にある「問い」に出会う場所。
+                    </p>
+                    <button onclick="openSignupModal()" class="bg-white text-neutral-950 px-12 py-5 text-sm font-medium tracking-[0.2em] uppercase hover:bg-amber-500 hover:text-white transition-all duration-700 shadow-2xl inline-flex items-center group">
+                        Join the Dialogue
+                        <i data-lucide="arrow-right" class="ml-3 group-hover:translate-x-2 transition-transform" size="18"></i>
+                    </button>
                 </div>
-                
-                <div class="grid gap-16">
-                    <div class="p-10 border-l-4 border-amber-500 bg-white shadow-sm space-y-4">
-                        <h4 class="text-2xl md:text-3xl font-light serif leading-tight">自立とは、経済的自立だけを指すのか？</h4>
-                    </div>
-                    <div class="p-10 border-l-4 border-amber-500 bg-white shadow-sm space-y-4">
-                        <h4 class="text-2xl md:text-3xl font-light serif leading-tight">誰にも依存しないことは、本当に「自由」なのだろうか？</h4>
-                    </div>
-                    <div class="p-10 border-l-4 border-amber-500 bg-white shadow-sm space-y-4">
-                        <h4 class="text-2xl md:text-3xl font-light serif leading-tight">「美しさ」と「稼ぐこと」は両立し得るのか？</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <!-- Program Section -->
-    <section id="program" class="py-24 md:py-48 bg-neutral-950 fade-in-section">
-        <div class="container mx-auto px-6">
-            <div class="max-w-4xl mx-auto">
-                <div class="text-center mb-24">
-                    <h2 class="text-xs text-amber-500 tracking-[0.5em] uppercase mb-6 font-medium">Timeline</h2>
-                    <h3 class="text-4xl md:text-7xl font-light tracking-tight serif">当日の構成 <span class="text-2xl md:text-3xl text-neutral-500 font-light block mt-4">2 Hours of Deep Dialogue</span></h3>
-                </div>
-
-                <div class="space-y-0 border-l border-neutral-800 ml-4 md:ml-0">
-                    <!-- Step 1 -->
-                    <div class="timeline-step relative pl-12 pb-20">
-                        <div class="timeline-dot absolute left-[-5px] top-0 w-[10px] h-[10px] rounded-full"></div>
-                        <span class="text-amber-500 text-sm font-bold tracking-widest serif italic uppercase">15 min</span>
-                        <h4 class="text-2xl font-light mt-2 mb-4 serif">① アイスブレイク</h4>
-                        <p class="text-neutral-400 font-light leading-relaxed">「最近“美しい”と思った瞬間」を共有し、日常の解像度を少しずつ高めていきます。</p>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="timeline-step relative pl-12 pb-20">
-                        <div class="timeline-dot absolute left-[-5px] top-0 w-[10px] h-[10px] rounded-full"></div>
-                        <span class="text-amber-500 text-sm font-bold tracking-widest serif italic uppercase">10 min (+3 min)</span>
-                        <h4 class="text-2xl font-light mt-2 mb-4 serif">② 鑑賞タイム</h4>
-                        <p class="text-neutral-400 font-light leading-relaxed">
-                            選び抜かれた音楽を聴く、あるいは名画と向き合う時間。<br>
-                            その後、内側に湧き上がった感情を3分間、言葉として書き出します。
-                        </p>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="timeline-step relative pl-12 pb-20">
-                        <div class="timeline-dot absolute left-[-5px] top-0 w-[10px] h-[10px] rounded-full"></div>
-                        <span class="text-amber-500 text-sm font-bold tracking-widest serif italic uppercase">40 min</span>
-                        <h4 class="text-2xl font-light mt-2 mb-4 serif">③ 小グループ対話</h4>
-                        <p class="text-neutral-400 font-light leading-relaxed">3〜4人の少人数で、それぞれの感性と視点を交換。他者の言葉が、自分の輪郭を浮き彫りにします。</p>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div class="timeline-step relative pl-12 pb-20">
-                        <div class="timeline-dot absolute left-[-5px] top-0 w-[10px] h-[10px] rounded-full"></div>
-                        <span class="text-amber-500 text-sm font-bold tracking-widest serif italic uppercase">20 min</span>
-                        <h4 class="text-2xl font-light mt-2 mb-4 serif">④ 全体共有</h4>
-                        <p class="text-neutral-400 font-light leading-relaxed">各グループで生まれた気づきをシェアし、会場全体で一つの大きな「問いのうねり」を作ります。</p>
-                    </div>
-
-                    <!-- Step 5 -->
-                    <div class="timeline-step relative pl-12 pb-20">
-                        <div class="timeline-dot absolute left-[-5px] top-0 w-[10px] h-[10px] rounded-full"></div>
-                        <span class="text-amber-500 text-sm font-bold tracking-widest serif italic uppercase">20 min</span>
-                        <h4 class="text-2xl font-light mt-2 mb-4 serif">⑤ 深掘り問い</h4>
-                        <p class="text-neutral-400 font-light leading-relaxed">核心に迫るキークエスチョンを投げかけ、思考をさらに一段深い場所へと進めます。</p>
-                    </div>
-
-                    <!-- Step 6 -->
-                    <div class="timeline-step relative pl-12">
-                        <div class="timeline-dot absolute left-[-5px] top-0 w-[10px] h-[10px] rounded-full"></div>
-                        <span class="text-neutral-500 text-sm font-bold tracking-widest serif italic uppercase">Closing</span>
-                        <h4 class="text-2xl font-light mt-2 mb-4 serif italic underline decoration-amber-500 decoration-1 underline-offset-8">⑥ アフター導線</h4>
-                        <p class="text-neutral-400 font-light italic">「今日の対話、もっと深く続けたい人いますか？」</p>
-                        <p class="text-neutral-500 text-sm mt-4 font-light leading-relaxed">終了後、希望者にはさらに思索を深めるためのコミュニティや次回の対話をご案内します。</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Info & Call to Action -->
-    <section id="info" class="py-24 md:py-48 bg-neutral-900/50 relative overflow-hidden fade-in-section">
-        <div class="absolute right-0 top-0 w-1/3 h-full opacity-10 pointer-events-none">
-            <img 
-                src="https://images.unsplash.com/photo-1447069387593-a5de0862481e?auto=format&fit=crop&q=80&w=800" 
-                alt="Archive" 
-                class="w-full h-full object-cover"
-            />
-        </div>
-
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="max-w-6xl mx-auto bg-neutral-900 border border-neutral-800 backdrop-blur-sm shadow-2xl overflow-hidden">
-                <div class="grid lg:grid-cols-12">
-                    <div class="lg:col-span-7 p-12 md:p-20 space-y-16">
-                        <h3 class="text-4xl md:text-5xl font-light tracking-tight italic serif">Gathering Details</h3>
-                        
-                        <div class="grid sm:grid-cols-2 gap-12">
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-3 text-amber-500 uppercase tracking-widest text-[10px] font-bold">
-                                    <i data-lucide="calendar" size="14"></i> Date & Time
-                                </div>
-                                <p class="text-xl font-light text-neutral-200 tracking-tight">2026.04.18 (Sat)</p>
-                                <p class="text-lg font-light text-neutral-400">18:00 — 21:00</p>
+            <!-- Concept Section -->
+            <section id="concept" class="py-24 md:py-48 bg-neutral-950 fade-in-section">
+                <div class="container mx-auto px-6">
+                    <div class="grid lg:grid-cols-2 gap-24 items-center">
+                        <div class="relative aspect-[4/5] overflow-hidden group">
+                            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=1200" class="w-full h-full object-cover grayscale transition-transform duration-[3000ms] group-hover:scale-110" alt="Sculpture">
+                            <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent opacity-80"></div>
+                            <div class="absolute bottom-12 left-12 right-12">
+                                <p class="text-xl md:text-2xl font-light italic text-neutral-200 serif">"The purpose of art is washing the dust of daily life off our souls."</p>
+                                <p class="text-xs mt-4 text-amber-500 uppercase tracking-[0.3em] font-medium">— Pablo Picasso</p>
                             </div>
-
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-3 text-amber-500 uppercase tracking-widest text-[10px] font-bold">
-                                    <i data-lucide="map-pin" size="14"></i> Venue
-                                </div>
-                                <p class="text-xl font-light text-neutral-200 tracking-tight">The Atelier Gallery</p>
-                                <p class="text-sm font-light text-neutral-400 underline underline-offset-4">東京都港区南青山（完全招待制）</p>
-                            </div>
-
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-3 text-amber-500 uppercase tracking-widest text-[10px] font-bold">
-                                    <i data-lucide="message-circle" size="14"></i> Capacity
-                                </div>
-                                <p class="text-xl font-light text-neutral-200 tracking-tight">限定 12 名</p>
-                                <p class="text-sm font-light text-neutral-400 italic">※残席わずか</p>
+                        </div>
+                        <div class="space-y-12">
+                            <h2 class="text-4xl md:text-6xl font-light tracking-tight leading-[1.1] serif">感性を研ぎ澄まし、<br><span class="text-amber-500 italic">理性と対話する。</span></h2>
+                            <div class="space-y-8 text-neutral-400 font-extralight text-lg md:text-xl leading-[1.8]">
+                                <p>芸術作品を通して自分自身の奥底にある価値観を覗き込み、他者との対話を通じて「自立した個」としての輪郭をなぞり直す試みです。</p>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="lg:col-span-5 bg-neutral-100 p-12 md:p-20 flex flex-col justify-between text-neutral-900">
-                        <div class="space-y-8">
-                            <h4 class="text-3xl font-light leading-tight italic serif">深い思考の旅へ、<br />共に出発しましょう。</h4>
-                            <p class="text-neutral-600 font-light leading-relaxed">
-                                対話を通じて、自分の中に眠る新しい感性と出会う。贅沢な知的時間を提供します。
+                </div>
+            </section>
+
+            <!-- Program Timeline -->
+            <section id="program" class="py-24 md:py-48 bg-neutral-950 fade-in-section">
+                <div class="container mx-auto px-6 max-w-4xl">
+                    <div class="text-center mb-24">
+                        <h2 class="text-xs text-amber-500 tracking-[0.5em] uppercase mb-6 font-medium">Timeline</h2>
+                        <h3 class="text-4xl md:text-7xl font-light serif">当日の構成</h3>
+                    </div>
+                    <div class="space-y-0 border-l border-neutral-800">
+                        <!-- Timeline Items as before -->
+                        <div class="timeline-step relative pl-12 pb-20">
+                            <div class="timeline-dot absolute left-[-5px] top-0 w-[10px] h-[10px] rounded-full"></div>
+                            <span class="text-amber-500 text-sm font-bold serif italic">15 min</span>
+                            <h4 class="text-2xl font-light mt-2 serif">① アイスブレイク</h4>
+                            <p class="text-neutral-400 font-light mt-2">「最近“美しい”と思った瞬間」の共有。</p>
+                        </div>
+                        <div class="timeline-step relative pl-12 pb-20">
+                            <div class="timeline-dot absolute left-[-5px] top-0 w-[10px] h-[10px] rounded-full"></div>
+                            <span class="text-amber-500 text-sm font-bold serif italic">10 min (+3 min)</span>
+                            <h4 class="text-2xl font-light mt-2 serif">② 鑑賞タイム</h4>
+                            <p class="text-neutral-400 font-light mt-2">音楽を聴く、あるいは名画と向き合い、感情を言葉にします。</p>
+                        </div>
+                        <div class="timeline-step relative pl-12 pb-20">
+                            <div class="timeline-dot absolute left-[-5px] top-0 w-[10px] h-[10px] rounded-full"></div>
+                            <span class="text-amber-500 text-sm font-bold serif italic">40 min</span>
+                            <h4 class="text-2xl font-light mt-2 serif">③ 小グループ対話</h4>
+                            <p class="text-neutral-400 font-light mt-2">3〜4人でそれぞれの感性と視点を交換します。</p>
+                        </div>
+                        <div class="timeline-step relative pl-12 pb-20">
+                            <div class="timeline-dot absolute left-[-5px] top-0 w-[10px] h-[10px] rounded-full"></div>
+                            <span class="text-amber-500 text-sm font-bold serif italic">20 min</span>
+                            <h4 class="text-2xl font-light mt-2 serif">④ 全体共有</h4>
+                        </div>
+                        <div class="timeline-step relative pl-12 pb-20">
+                            <div class="timeline-dot absolute left-[-5px] top-0 w-[10px] h-[10px] rounded-full"></div>
+                            <span class="text-amber-500 text-sm font-bold serif italic">20 min</span>
+                            <h4 class="text-2xl font-light mt-2 serif">⑤ 深掘り問い</h4>
+                            <p class="text-neutral-500 text-sm mt-4 font-light">
+                                ・自立とは経済的自立だけか？<br>
+                                ・依存しないことは本当に自由か？<br>
+                                ・美と稼ぐは両立するか？
                             </p>
-                            <div class="pt-4">
-                                <p class="text-xs uppercase tracking-[0.3em] text-neutral-400 mb-2 font-bold">Entrance Fee</p>
-                                <p class="text-3xl font-light tracking-tighter serif">¥5,500 <span class="text-sm tracking-normal text-neutral-500">/ Inc. Drinks & Snacks</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Info Section -->
+            <section id="info" class="py-24 md:py-48 bg-neutral-900/50">
+                <div class="container mx-auto px-6">
+                    <div class="max-w-6xl mx-auto bg-neutral-900 border border-neutral-800 shadow-2xl overflow-hidden grid lg:grid-cols-12">
+                        <div class="lg:col-span-7 p-12 md:p-20 space-y-12">
+                            <h3 class="text-4xl md:text-5xl font-light italic serif">Gathering Details</h3>
+                            <div class="grid sm:grid-cols-2 gap-12">
+                                <div class="space-y-2">
+                                    <div class="text-amber-500 uppercase text-[10px] font-bold tracking-widest">Date & Time</div>
+                                    <p class="text-xl font-light display-date">Loading...</p>
+                                    <p class="text-lg font-light text-neutral-400 display-time">Loading...</p>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="text-amber-500 uppercase text-[10px] font-bold tracking-widest">Venue</div>
+                                    <p class="text-xl font-light display-location">Loading...</p>
+                                </div>
                             </div>
                         </div>
-                        
-                        <button class="w-full mt-12 bg-neutral-950 text-white py-6 px-8 text-sm font-bold uppercase tracking-[0.3em] hover:bg-amber-600 transition-all duration-700 shadow-xl">
-                            Reserve My Seat
+                        <div class="lg:col-span-5 bg-neutral-100 p-12 md:p-20 flex flex-col justify-between text-neutral-900 text-center">
+                            <div class="space-y-6">
+                                <h4 class="text-3xl font-light italic serif">対話の旅へ。</h4>
+                                <p class="text-neutral-600 font-light">残席状況などは申し込み後にご連絡いたします。</p>
+                            </div>
+                            <button onclick="openSignupModal()" class="mt-12 bg-neutral-950 text-white py-6 px-8 text-sm font-bold tracking-[0.2em] uppercase hover:bg-amber-600 transition-all shadow-xl">Reserve My Seat</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Simple Footer -->
+            <footer class="py-12 border-t border-neutral-900 text-center text-[10px] text-neutral-600 tracking-widest uppercase serif">
+                © 2026 Art × Philosophy Dialogue Project
+            </footer>
+        </div>
+
+        <!-- ADMIN LOGIN VIEW -->
+        <div id="login-view" hidden class="min-h-screen flex items-center justify-center p-6">
+            <div class="login-card w-full max-w-md p-10 md:p-12 space-y-10">
+                <div class="text-center">
+                    <h2 class="text-2xl font-light serif italic tracking-widest">Organiser Access</h2>
+                    <div class="w-12 h-px bg-amber-500/50 mx-auto mt-4"></div>
+                </div>
+                <form id="login-form" class="space-y-6">
+                    <div class="space-y-1">
+                        <label class="text-[10px] uppercase tracking-widest font-bold text-neutral-500">Admin ID</label>
+                        <input type="text" id="login-id" required class="w-full border-b border-neutral-700 bg-transparent py-3 outline-none focus:border-amber-500 transition-colors" placeholder="IDを入力">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] uppercase tracking-widest font-bold text-neutral-500">Password</label>
+                        <input type="password" id="login-pass" required class="w-full border-b border-neutral-700 bg-transparent py-3 outline-none focus:border-amber-500 transition-colors" placeholder="••••••••">
+                    </div>
+                    <div id="login-error" hidden class="text-red-400 text-xs text-center">IDまたはパスワードが正しくありません</div>
+                    <div class="pt-4 flex flex-col gap-4">
+                        <button type="submit" class="w-full bg-white text-neutral-900 py-4 text-xs font-bold uppercase tracking-[0.2em] hover:bg-amber-500 hover:text-white transition-all">Login</button>
+                        <button type="button" onclick="hideAdminLogin()" class="text-neutral-500 text-[10px] uppercase tracking-widest hover:text-white transition-colors">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ADMIN DASHBOARD VIEW -->
+        <div id="admin-view" hidden class="min-h-screen bg-neutral-50 text-neutral-900 p-6 md:p-12">
+            <div class="max-w-6xl mx-auto space-y-12">
+                <div class="flex justify-between items-center border-b border-neutral-200 pb-8">
+                    <h2 class="text-3xl font-light serif">Organizer Portal</h2>
+                    <div class="flex gap-6">
+                        <button onclick="logoutAdmin()" class="text-neutral-400 hover:text-red-500 transition-colors flex items-center gap-2 text-sm uppercase tracking-widest">
+                            <i data-lucide="log-out" size="16"></i> Logout
                         </button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="py-16 border-t border-neutral-900 bg-neutral-950">
-        <div class="container mx-auto px-6 text-center">
-            <div class="text-2xl font-light tracking-[0.5em] uppercase mb-12 serif">
-                Art <span class="text-amber-500">×</span> Philosophy
-            </div>
-            <div class="flex justify-center space-x-12 mb-12">
-                <a href="#" class="text-neutral-500 hover:text-amber-500 transition-colors text-xs tracking-widest uppercase">Instagram</a>
-                <a href="#" class="text-neutral-500 hover:text-amber-500 transition-colors text-xs tracking-widest uppercase">Twitter</a>
-                <a href="#" class="text-neutral-500 hover:text-amber-500 transition-colors text-xs tracking-widest uppercase">Member Portal</a>
-            </div>
-            <div class="text-[10px] font-light text-neutral-600 tracking-[0.4em] uppercase">
-                © 2026 ART × PHILOSOPHY PROJECT . TOKYO JAPAN
+                <div class="grid lg:grid-cols-3 gap-12">
+                    <!-- Schedule Editor -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-white p-8 border border-neutral-200 shadow-sm rounded-lg">
+                            <h3 class="text-xl font-medium mb-6 flex items-center gap-2"><i data-lucide="settings" size="20"></i>日程・場所設定</h3>
+                            <form id="schedule-form" class="space-y-4">
+                                <div>
+                                    <label class="text-xs uppercase tracking-widest text-neutral-400 block mb-1">開催日</label>
+                                    <input type="text" id="input-date" class="w-full border-b border-neutral-200 py-2 focus:border-amber-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-xs uppercase tracking-widest text-neutral-400 block mb-1">開催時間</label>
+                                    <input type="text" id="input-time" class="w-full border-b border-neutral-200 py-2 focus:border-amber-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-xs uppercase tracking-widest text-neutral-400 block mb-1">会場名</label>
+                                    <input type="text" id="input-location" class="w-full border-b border-neutral-200 py-2 focus:border-amber-500 outline-none">
+                                </div>
+                                <button type="submit" class="w-full bg-neutral-900 text-white py-4 rounded-md hover:bg-black transition-colors mt-4">設定を保存</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Signup List -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white border border-neutral-200 shadow-sm rounded-lg overflow-hidden">
+                            <div class="p-8 border-b border-neutral-100 flex justify-between items-center">
+                                <h3 class="text-xl font-medium flex items-center gap-2"><i data-lucide="users" size="20"></i>申し込み一覧</h3>
+                                <span id="signup-count" class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold">0件</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead class="bg-neutral-50 border-b border-neutral-100 text-[10px] uppercase tracking-widest text-neutral-400">
+                                        <tr>
+                                            <th class="px-8 py-4">申込日時</th>
+                                            <th class="px-8 py-4">お名前</th>
+                                            <th class="px-8 py-4">メールアドレス</th>
+                                            <th class="px-8 py-4">備考</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="signup-table-body" class="text-sm text-neutral-600">
+                                        <!-- Data injected -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signup-modal" hidden class="fixed inset-0 z-[100] flex items-center justify-center p-6 modal-backdrop">
+        <div class="bg-white text-neutral-900 w-full max-w-lg p-10 md:p-12 shadow-2xl relative">
+            <button onclick="closeSignupModal()" class="absolute top-6 right-6 text-neutral-400 hover:text-black transition-colors"><i data-lucide="x"></i></button>
+            <div class="text-center mb-10">
+                <h3 class="text-3xl font-light serif mb-4 italic underline decoration-amber-500 underline-offset-8">Join the Dialogue</h3>
+                <p class="text-neutral-500 text-sm">あなた自身の「問い」を深める一席を、今予約してください。</p>
+            </div>
+            <form id="signup-form" class="space-y-6">
+                <div class="space-y-1">
+                    <label class="text-[10px] uppercase tracking-widest font-bold text-neutral-400">Your Name</label>
+                    <input type="text" name="name" required class="w-full border-b border-neutral-200 py-3 outline-none focus:border-amber-500 transition-colors bg-transparent" placeholder="お名前">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] uppercase tracking-widest font-bold text-neutral-400">Email Address</label>
+                    <input type="email" name="email" required class="w-full border-b border-neutral-200 py-3 outline-none focus:border-amber-500 transition-colors bg-transparent" placeholder="example@mail.com">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] uppercase tracking-widest font-bold text-neutral-400">Message (Optional)</label>
+                    <textarea name="message" rows="3" class="w-full border-b border-neutral-200 py-3 outline-none focus:border-amber-500 transition-colors bg-transparent resize-none" placeholder="期待していることなど"></textarea>
+                </div>
+                <button type="submit" id="submit-btn" class="w-full bg-neutral-950 text-white py-5 px-8 text-xs font-bold uppercase tracking-[0.3em] hover:bg-amber-600 transition-all shadow-xl">
+                    Submit Reservation
+                </button>
+            </form>
+            <div id="success-msg" hidden class="text-center py-10 space-y-4">
+                <i data-lucide="check-circle" class="mx-auto text-amber-500" size="48"></i>
+                <h4 class="text-xl font-medium">Reservation Sent</h4>
+                <p class="text-neutral-500 text-sm">お申し込みありがとうございます。</p>
+                <button onclick="closeSignupModal()" class="text-amber-500 text-xs font-bold uppercase tracking-widest mt-4">Close Window</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'art-phi-app';
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token).catch(() => signInAnonymously(auth));
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                initRealtimeSync();
+            }
+        });
+
+        initAuth();
+
+        function initRealtimeSync() {
+            if (!currentUser) return;
+
+            // 1. Settings Sync
+            onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', 'settings'), (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    updateDisplay(data);
+                    fillAdminForm(data);
+                } else {
+                    updateDisplay({ date: "2026.04.18 (Sat)", time: "18:00 — 21:00", location: "The Atelier Gallery" });
+                }
+            }, (err) => console.error(err));
+
+            // 2. Signups Sync
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'signups'), (snapshot) => {
+                const signupList = [];
+                snapshot.forEach(doc => signupList.push({ id: doc.id, ...doc.data() }));
+                renderSignupTable(signupList);
+            }, (err) => console.error(err));
+        }
+
+        function updateDisplay(data) {
+            document.querySelectorAll('.display-date').forEach(el => el.textContent = data.date);
+            document.querySelectorAll('.display-time').forEach(el => el.textContent = data.time);
+            document.querySelectorAll('.display-location').forEach(el => el.textContent = data.location);
+        }
+
+        function fillAdminForm(data) {
+            const dateIn = document.getElementById('input-date');
+            const timeIn = document.getElementById('input-time');
+            const locIn = document.getElementById('input-location');
+            if (dateIn) dateIn.value = data.date || "";
+            if (timeIn) timeIn.value = data.time || "";
+            if (locIn) locIn.value = data.location || "";
+        }
+
+        function renderSignupTable(data) {
+            const container = document.getElementById('signup-table-body');
+            const countLabel = document.getElementById('signup-count');
+            if (!container || !countLabel) return;
+
+            countLabel.textContent = `${data.length}件`;
+            const sortedData = data.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+            container.innerHTML = sortedData.length ? '' : '<tr><td colspan="4" class="px-8 py-10 text-center text-neutral-400">申し込みはありません</td></tr>';
+            
+            sortedData.forEach(item => {
+                const date = item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleString('ja-JP') : '-';
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-neutral-50 hover:bg-neutral-50 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-8 py-4 text-xs text-neutral-400">${date}</td>
+                    <td class="px-8 py-4 font-medium">${item.name}</td>
+                    <td class="px-8 py-4 text-neutral-500">${item.email}</td>
+                    <td class="px-8 py-4 text-neutral-400 italic text-[11px]">${item.message || '-'}</td>
+                `;
+                container.appendChild(tr);
+            });
+        }
+
+        // Signup Submit
+        document.getElementById('signup-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.textContent = "Processing...";
+            const formData = new FormData(e.target);
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'signups'), {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    message: formData.get('message'),
+                    createdAt: serverTimestamp()
+                });
+                document.getElementById('signup-form').hidden = true;
+                document.getElementById('success-msg').hidden = false;
+                lucide.createIcons();
+            } catch (err) { alert("Error sending reservation."); }
+            btn.disabled = false;
+            btn.textContent = "Submit Reservation";
+        };
+
+        // Schedule Update
+        document.getElementById('schedule-form').onsubmit = async (e) => {
+            e.preventDefault();
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'settings'), {
+                    date: document.getElementById('input-date').value,
+                    time: document.getElementById('input-time').value,
+                    location: document.getElementById('input-location').value,
+                    updatedAt: serverTimestamp()
+                });
+                alert("Settings updated.");
+            } catch (err) { alert("Error updating settings."); }
+        };
+    </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) {
-                lucide.createIcons();
-            }
+        // --- Admin Login Logic ---
+        let isAdminLoggedIn = false;
+        const ADMIN_CREDENTIALS = { id: 'admin', pass: 'phi2026' };
 
+        function showAdminLogin() {
+            if (isAdminLoggedIn) {
+                toggleAdminView(true);
+            } else {
+                document.getElementById('public-view').hidden = true;
+                document.getElementById('login-view').hidden = false;
+                document.getElementById('navbar').hidden = true;
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function hideAdminLogin() {
+            document.getElementById('public-view').hidden = false;
+            document.getElementById('login-view').hidden = true;
+            document.getElementById('navbar').hidden = false;
+        }
+
+        document.getElementById('login-form').onsubmit = (e) => {
+            e.preventDefault();
+            const id = document.getElementById('login-id').value;
+            const pass = document.getElementById('login-pass').value;
+            const errorMsg = document.getElementById('login-error');
+
+            if (id === ADMIN_CREDENTIALS.id && pass === ADMIN_CREDENTIALS.pass) {
+                isAdminLoggedIn = true;
+                errorMsg.hidden = true;
+                document.getElementById('login-form').reset();
+                toggleAdminView(true);
+            } else {
+                errorMsg.hidden = false;
+            }
+        };
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            toggleAdminView(false);
+        }
+
+        function toggleAdminView(show) {
+            const publicV = document.getElementById('public-view');
+            const adminV = document.getElementById('admin-view');
+            const loginV = document.getElementById('login-view');
+            const navbar = document.getElementById('navbar');
+
+            if (show) {
+                publicV.hidden = true;
+                loginV.hidden = true;
+                adminV.hidden = false;
+                navbar.hidden = true;
+            } else {
+                publicV.hidden = false;
+                adminV.hidden = true;
+                loginV.hidden = true;
+                navbar.hidden = false;
+            }
+            lucide.createIcons();
+        }
+
+        // --- Other UI Helpers ---
+        function openSignupModal() {
+            document.getElementById('signup-modal').hidden = false;
+            document.body.classList.add('overflow-hidden');
+            lucide.createIcons();
+        }
+
+        function closeSignupModal() {
+            document.getElementById('signup-modal').hidden = true;
+            document.body.classList.remove('overflow-hidden');
+            document.getElementById('signup-form').hidden = false;
+            document.getElementById('signup-form').reset();
+            document.getElementById('success-msg').hidden = true;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
             const navbar = document.getElementById('navbar');
             window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('nav-scrolled');
-                } else {
-                    navbar.classList.remove('nav-scrolled');
-                }
+                if (window.scrollY > 50) navbar.classList.add('nav-scrolled');
+                else navbar.classList.remove('nav-scrolled');
             });
 
-            const menuToggle = document.getElementById('menu-toggle');
-            const menuClose = document.getElementById('menu-close');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const menuLinks = document.querySelectorAll('.menu-link');
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.fade-in-section').forEach(el => obs.observe(el));
 
-            if (menuToggle && menuClose && mobileMenu) {
-                function toggleMenu() {
-                    mobileMenu.classList.toggle('hidden');
-                    mobileMenu.classList.toggle('flex');
-                    document.body.classList.toggle('overflow-hidden');
-                }
-
-                menuToggle.addEventListener('click', toggleMenu);
-                menuClose.addEventListener('click', toggleMenu);
-                menuLinks.forEach(link => link.addEventListener('click', toggleMenu));
-            }
-
-            // General Fade-in Animation
-            const sections = document.querySelectorAll('.fade-in-section');
-            if ('IntersectionObserver' in window) {
-                const observerOptions = {
-                    threshold: 0.05,
-                    rootMargin: '0px 0px -50px 0px'
-                };
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, observerOptions);
-
-                sections.forEach(section => {
-                    observer.observe(section);
-                });
-            } else {
-                sections.forEach(section => {
-                    section.classList.add('visible');
-                });
-            }
-
-            // --- Timeline Focus Logic ---
             const timelineSteps = document.querySelectorAll('.timeline-step');
-            if ('IntersectionObserver' in window) {
-                const timelineOptions = {
-                    // 画面の中央付近（40%〜60%）にあるものを検知
-                    rootMargin: '-40% 0% -40% 0%',
-                    threshold: 0
-                };
-
-                const timelineObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            // 他のステップから active を除去して現在のものに付与
-                            timelineSteps.forEach(s => s.classList.remove('active'));
-                            entry.target.classList.add('active');
-                        }
-                    });
-                }, timelineOptions);
-
-                timelineSteps.forEach(step => {
-                    timelineObserver.observe(step);
-                });
-            }
-
-            setTimeout(() => {
-                sections.forEach(section => {
-                    if (!section.classList.contains('visible')) {
-                        section.classList.add('visible');
+            const tlObs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        timelineSteps.forEach(s => s.classList.remove('active'));
+                        e.target.classList.add('active');
                     }
                 });
-            }, 2000);
+            }, { rootMargin: '-40% 0% -40% 0%' });
+            timelineSteps.forEach(el => tlObs.observe(el));
         });
     </script>
 </body>
